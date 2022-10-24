@@ -34,8 +34,9 @@ abstract contract ERC4626 is ERC20 {
     constructor(
         ERC20 _asset,
         string memory _name,
-        string memory _symbol
-    ) ERC20(_name, _symbol, _asset.decimals()) {
+        string memory _symbol,
+        uint8 _decimals()
+    ) ERC20(_name, _symbol, _decimals) {
         asset = _asset;
     }
 
@@ -119,7 +120,9 @@ abstract contract ERC4626 is ERC20 {
                             ACCOUNTING LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    function totalAssets() public view virtual returns (uint256);
+    function totalAssets() public view virtual returns (uint256) {
+        return asset.balanceOf(address(this));
+    };
 
     function convertToShares(uint256 assets) public view virtual returns (uint256) {
         uint256 supply = totalSupply; // Saves an extra SLOAD if totalSupply is non-zero.
